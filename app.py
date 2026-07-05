@@ -215,7 +215,7 @@ st.divider()
 st.header("📈 Daily Sales Trend")
 
 daily_sales = (
-    
+    .groupby("date")["strainales"]
     .sum()
     .reset_index()
 )
