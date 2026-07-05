@@ -23,7 +23,6 @@ st.set_page_config(
 BASE_DIR = os.path.dirname(__file__)
 
 MODEL_PATH = os.path.join(BASE_DIR, "..", "xgboost_sales_model.pkl")
-TRAIN_PATH = os.path.join(BASE_DIR, "..", "data", "train.csv")
 
 # ---------------------------------------------------
 # LOAD MODEL
@@ -46,22 +45,6 @@ model = joblib.load(MODEL_PATH)
 # CREATE FEATURES
 # ---------------------------------------------------
 
-train["year"] = train["date"].dt.year
-train["month"] = train["date"].dt.month
-train["day"] = train["date"].dt.day
-train["weekday"] = train["date"].dt.weekday
-
-train["lag_1"] = train.groupby(["store_nbr", "family"])["sales"].shift(1)
-
-train["rolling_7"] = (
-    train.groupby(["store_nbr", "family"])["sales"]
-    .rolling(7)
-    .mean()
-    .reset_index(level=[0,1], drop=True)
-)
-
-train["lag_1"] = train["lag_1"].fillna(0)
-train["rolling_7"] = train["rolling_7"].fillna(0)
 
 # ---------------------------------------------------
 # PRODUCT FAMILY MAPPING
@@ -173,8 +156,6 @@ day = selected_date.day
 weekday = selected_date.weekday()
 
 # Use average lag values
-lag_1 = train["lag_1"].mean()
-rolling_7 = train["rolling_7"].mean()
 
 if st.button("🚀 Predict Sales", use_container_width=True):
 
@@ -234,7 +215,7 @@ st.divider()
 st.header("📈 Daily Sales Trend")
 
 daily_sales = (
-    train.groupby("date")["sales"]
+    
     .sum()
     .reset_index()
 )
@@ -269,7 +250,7 @@ st.divider()
 st.header("🏪 Top 10 Stores by Total Sales")
 
 store_sales = (
-    train.groupby("store_nbr")["sales"]
+    
     .sum()
     .sort_values(ascending=False)
     .head(10)
