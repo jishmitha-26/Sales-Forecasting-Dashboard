@@ -40,9 +40,7 @@ model = joblib.load(MODEL_PATH)
 # LOAD DATA
 # ---------------------------------------------------
 
-train = pd.read_csv(TRAIN_PATH)
 
-train["date"] = pd.to_datetime(train["date"])
 
 # ---------------------------------------------------
 # CREATE FEATURES
